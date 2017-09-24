@@ -2,13 +2,11 @@ var friendData = require('../data/friends.js');
 var path = require('path');
 
 // API GET Requests - when users "visit" a page. 
-// (ex:localhost:PORT/api/admin...they are shown a JSON of the data in the table) 
-
-var totalDifference = 0;
+// (ex:localhost:PORT/api/friends...they are shown a JSON of the data in the table) 
 
 module.exports = function(app){
 	app.get('/api/friends', function(req, res){
-		res.json(friends);
+		res.json(friendData);
 	});
 
 //API POST Request-handles when user submits a form & thus submits data to the server.
@@ -23,29 +21,36 @@ module.exports = function(app){
 			image: "",
 			matchDifference: 1000
 		};
-		var usrData 	= req.body;
-		var usrName 	= usrData.name;
-		var usrImage 	= usrData.image;
-		var usrScores 	= usrData.scores;
 
+		console.log(req.body);
+
+		//These variables will store the users survey Post
+		var userData= req.body;
+		var userScores= userData.scores;
+
+		console.log(userScores);
+		
+		//This variable will calculate the difference between the user's scores and the scores of each user in the database
 		var totalDifference = 0;
 
-		//loop through the friends data array of objects to get each friends scores
-		for(var i = 0; i < [friends].length-1; i++){
-			console.log(friends[i].name);
+		//2 Loops are happening. One to go through all of the friends and one to go through everyones scores
+		
+		//loop 1-loop through all the friends in the database
+		for(var i = 0; i < friendData.length; i++){
+
+			console.log(friendData[i]);
 			totalDifference = 0;
 
-			//loop through that friends score and the users score and calculate the 
-			// absolute difference between the two and push that to the total difference variable set above
-			for(var j = 0; j < 10; j++){
+			//loop 2-go through friends scores and the users score and calculate the difference between the two.  Push the total differnce to the variable set above
+			for(var j = 0; j < friendData[i].scores[j]; j++){
 				// We calculate the difference between the scores and sum them into the totalDifference
-				totalDifference += Math.abs(parseInt(usrScores[j]) - parseInt(friends[i].scores[j]));
+				totalDifference += Math.abs(parseInt(userScores[j]) - parseInt(friendData[i].scores[j]));
 				// If the sum of differences is less then the differences of the current "best match"
 				if (totalDifference <= greatMatch.friendDifference){
 
 					// Reset the bestMatch to be the new friend. 
-					greatMatch.name = friends[i].name;
-					greatMatch.photo = friends[i].photo;
+					greatMatch.name = friendData[i].name;
+					greatMatch.photo = friendData[i].photo;
 					greatMatch.matchDifference = totalDifference;
 				}
 			}
@@ -54,7 +59,7 @@ module.exports = function(app){
 	// Finally save the user's data to the database (this has to happen AFTER the check. otherwise,
 	// the database will always return that the user is the user's best friend).	
 
-		friends.push(usrData);
+		friendData.push(userData);
  	// / Return a JSON with the user's greatMatch. This will be used by the HTML in the next page. 
 		res.json(greatMatch);
 	});
