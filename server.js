@@ -2,7 +2,7 @@
 
 var express= require("express");
 var bodyParser = require("body-parser");
-var path = ('path');
+ 
 
 //server set up
 var app = express();
@@ -10,9 +10,9 @@ var PORT = process.env.PORT || 3000
 
 //setting up bodyParser so the server can interpret the data sent to it eaisly
 // app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ type: 'application/*+json'}));
-app.use(bodyParser.text({ type: 'text/html'}));
+app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
 // Static files

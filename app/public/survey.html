@@ -176,7 +176,7 @@
 	      </div>
 	      <div class="modal-body">
 	        <h2 id="matchName"></h2>
-	        <img id="matchImg" src="http://feelgrafix.com/data/images/images-11.jpg" alt="">
+	        <img class="img-responsive" id="matchImg" src="http://feelgrafix.com/data/images/images-11.jpg" alt="" style="max-height:250px;">
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -201,17 +201,19 @@
       $(selector).chosen(config[selector]);
     }
     // Capture the form inputs 
-    $("#submit").on("click", function(){
+    $("#submit").on("click", function(event){
+    	event.preventDefault();
+
     	// Form validation
     	function validateForm() {
 		  var isValid = true;
 		  $('.form-control').each(function() {
-		    if ( $(this).val() === '' )
+		    if ($(this).val() === '' )
 		        isValid = false;
 		  });
 		  $('.chosen-select').each(function() {
 		  	if( $(this).val() === "")
-		  		isValid = false
+		  		isValid = false;
 		  })
 		  return isValid;
 		}
@@ -225,9 +227,9 @@
 	    		scores: [$("#q1").val(), $("#q2").val(), $("#q3").val(), $("#q4").val(), $("#q5").val(), $("#q6").val(), $("#q7").val(), $("#q8").val(), $("#q9").val(), $("#q10").val(), ]
 	    	}
 	    	// Grab the URL of the website
-	    	var currentURL = window.location.origin;
+	    	// var currentURL = window.location.origin;
 	    	// AJAX post the data to the friends API. 
-	    	$.post(currentURL + "/api/friends", userData, function(data){
+	    	$.post( "/api/friends", userData, function(data){
 	    		// Grab the result from the AJAX post so that the best match's name and photo are displayed.
 	    		$("#matchName").text(data.name);
 	    		$('#matchImg').attr("src", data.photo);
